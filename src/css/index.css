@@ -1,0 +1,18 @@
+
+.titlebar {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}
+
+.titlebar-button {
+  -webkit-app-region: no-drag;
+}
+
+.form-control{
+  padding-left: 2rem !important;
+}
+
+.card-header{
+  background: rgb(32, 140, 255);
+  background: radial-gradient(circle, rgba(67,159,255,1) 41%, rgba(0,212,255,1) 96%); 
+}
