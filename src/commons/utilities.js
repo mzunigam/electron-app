@@ -15,6 +15,19 @@ const setHtmlSize = (element) => {
     });
 }
 
+const responsiveWindows = async (element) => {
+    const getFontSize = () => {
+        const htmlElement = document.querySelector('body');
+        const {fontSize} = window.getComputedStyle(htmlElement);
+        return {fontSize};
+    }
+    const {fontSize} = await element.webContents.executeJavaScript(`(${getFontSize.toString()})()`);
+    element.on('resize', (e) => {
+
+    });
+}
+
 module.exports = {
-    setHtmlSize
+    setHtmlSize,
+    responsiveWindows
 }
