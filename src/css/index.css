@@ -14,5 +14,33 @@
 
 .card-header{
   background: rgb(32, 140, 255);
-  background: radial-gradient(circle, rgba(67,159,255,1) 41%, rgba(0,212,255,1) 96%); 
+  background: radial-gradient(circle, rgba(67,159,255,1) 41%, rgba(0,212,255,1) 96%);
+}
+.btn-header-hover{
+  transition:  all .5s ease-in-out;
+  font-size: 0.75rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius:25%;
+  background: rgb(155, 204, 255);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn-header-hover:hover{
+  scale: 1.25;
+  background: rgb(72, 72, 72);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.24) 41%, rgb(121, 184, 255) 96%);
+}
+
+button.trailing{
+  pointer-events: all !important;
+  background: transparent !important;
+  border: none !important;
+  transition:  all 0.5s ease-in-out;
+}
+
+button.trailing:hover{
+  scale: 1.25;
+  color: #0096c5;
 }

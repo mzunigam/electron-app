@@ -9,6 +9,7 @@ const setHtmlSize = (element) => {
             const {width, height} = result;
             element.setContentSize(Math.ceil(width), Math.ceil(height));
             element.setSize(Math.ceil(width), Math.ceil(height));
+            element.setResizable(false);
             element.center();
             element.show();
         });
@@ -16,15 +17,15 @@ const setHtmlSize = (element) => {
 }
 
 const responsiveWindows = async (element) => {
-    const getFontSize = () => {
-        const htmlElement = document.querySelector('body');
-        const {fontSize} = window.getComputedStyle(htmlElement);
-        return {fontSize};
-    }
-    const {fontSize} = await element.webContents.executeJavaScript(`(${getFontSize.toString()})()`);
-    element.on('resize', (e) => {
-
-    });
+    // const getFontSize = () => {
+    //     const htmlElement = document.querySelector('body');
+    //     const {fontSize} = window.getComputedStyle(htmlElement);
+    //     return {fontSize};
+    // }
+    // const {fontSize} = await element.webContents.executeJavaScript(`(${getFontSize.toString()})()`);
+    // element.on('resize', (e) => {
+    //
+    // });
 }
 
 module.exports = {

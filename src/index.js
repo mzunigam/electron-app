@@ -17,7 +17,7 @@ const init = async () => {
     });
     login.loadFile(join(__dirname, '/views/login.html')).then(()=> {});
     setHtmlSize(login);
-    responsiveWindows(login);
+    await responsiveWindows(login);
     // login.setResizable(false);
     login.on('close', (e) => {
         e.preventDefault();
