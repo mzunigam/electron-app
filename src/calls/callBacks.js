@@ -1,4 +1,8 @@
 const {ipcMain,dialog} = require("electron");
+const {app,BrowserWindow} = require('electron');
+const {join} = require("path");
+const {setHtmlSize, responsiveWindows}  = require('../commons/utilities');
+
 const callBack = (element) => {
     ipcMain.on('renderer-to-main', (event,message) => {
         if(![null,undefined].includes(message.data)){
@@ -9,18 +13,41 @@ const callBack = (element) => {
                     element.hide();
                     break;
                 case "validate":
-                    salute();
+                    openWindow(element);
                     break;
             }
         }
     });
 }
 
-const salute = () => {
-    dialog.showMessageBox({
-        title: "Salute",
-        message: "Hello World"
+const openWindow = async (element) => {
+    element.hide();
+
+    const menu = new BrowserWindow({
+        minWidth: 100,
+        height: 100,
+        webPreferences: {
+            nodeIntegration: true,
+            preload: join(__dirname, 'preload.js')
+        },
+        transparent: true,
+        frame: false,
     });
+
+    console.log(__dirname+'/views/menu.html');
+
+    menu.loadFile(join(__dirname, '../views/menu.html')).then(()=> {});
+    setHtmlSize(menu);
+    await responsiveWindows(menu);
+
+    menu.once("ready-to-show", () => {
+        menu.show();
+    });
+    menu.on('close', (e) => {
+        e.preventDefault();
+        menu.hide();
+    });
+    // callBack(menu);
 }
 
 module.exports = {
