@@ -81,27 +81,6 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td class="mdl-data-table__cell--non-numeric">1</td>
-                            <td>COD</td>
-                            <td>CODIGO</td>
-                            <td>TEST</td>
-                            <td>TEST</td>
-                        </tr>
-                        <tr>
-                            <td class="mdl-data-table__cell--non-numeric">1</td>
-                            <td>COD</td>
-                            <td>CODIGO</td>
-                            <td>TEST</td>
-                            <td>TEST</td>
-                        </tr>
-                        <tr>
-                            <td class="mdl-data-table__cell--non-numeric">1</td>
-                            <td>COD</td>
-                            <td>CODIGO</td>
-                            <td>TEST</td>
-                            <td>TEST</td>
-                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -120,7 +99,32 @@
 <script src="../lib/js/datatables.min.js"></script>
 <script>
     document.querySelector(".titlebar").style.webkitAppRegion = "drag";
-    $('#tblPrincipal').DataTable();
+    $('#tblPrincipal').DataTable({
+        autoWidth: true,
+        language: {
+            "lengthMenu": "Mostrar: _MENU_",
+            "zeroRecords": "&nbsp;&nbsp;&nbsp; No se encontraron resultados",
+            "info": "&nbsp;&nbsp;&nbsp; Mostrando del _START_ al _END_ de un total de _TOTAL_ registros",
+            "infoEmpty": "&nbsp;&nbsp;&nbsp; Mostrando 0 de 0 registros",
+            "search": "Filtrar:",
+            "loadingRecords": "Cargando...",
+            "paginate": {
+                "first": "First",
+                "last": "Last",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        },
+        bSort: false,
+        bFilter: false,
+        // serverSide: true,
+        // processing: true,
+        aaSorting: [0],
+        ordering: false,
+        bLengthChange: false,
+        bInfo: true,
+        paging: true,
+    });
 </script>
 
 </html>

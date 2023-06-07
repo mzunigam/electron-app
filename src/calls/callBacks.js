@@ -34,8 +34,6 @@ const openWindow = async (element) => {
         frame: false,
     });
 
-    console.log(__dirname+'/views/menu.html');
-
     menu.loadFile(join(__dirname, '../views/menu.html')).then(()=> {});
     setHtmlSize(menu);
     await responsiveWindows(menu);
@@ -47,7 +45,7 @@ const openWindow = async (element) => {
         e.preventDefault();
         menu.hide();
     });
-    // callBack(menu);
+
 }
 
 module.exports = {

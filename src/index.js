@@ -13,7 +13,7 @@ const init = async () => {
         },
         transparent: true,
         frame: false,
-        // autoHideMenuBar: true,
+
     });
     login.loadFile(join(__dirname, '/views/login.html')).then(()=> {});
     setHtmlSize(login);
