@@ -115,6 +115,15 @@
                 "previous": "Anterior"
             }
         },
+        ajax: {
+            type: 'POST',
+            url: '../Servlet/HorasExtrasServlet?accion=listarHorasExtrasRecuperacion',
+            data: {
+                json: JSON.stringify(json)
+            }, beforeSend: function () {
+            }, complete: function (datos) {
+            }
+        },
         bSort: false,
         bFilter: false,
         // serverSide: true,

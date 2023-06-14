@@ -1,23 +1,43 @@
-const {ipcMain,dialog} = require("electron");
-const {app,BrowserWindow} = require('electron');
+const {ipcMain, dialog} = require("electron");
+const {BrowserWindow} = require('electron');
 const {join} = require("path");
-const {setHtmlSize, responsiveWindows}  = require('../commons/utilities');
+const {setHtmlSize, responsiveWindows} = require('../commons/utilities');
+const axios = require('axios');
+const http = axios.create({
+    baseURL: 'http://localhost:8082/api/v1',
+    timeout: 1000,
+    headers: {'Content-Type': 'application/json'}
+});
 
-const callBack = (element) => {
-    ipcMain.on('renderer-to-main', (event,message) => {
-        if(![null,undefined].includes(message.data)){
-
-        }else{
-            switch (message) {
+const callBack = async (element) => {
+    ipcMain.on('renderer-to-main', (event, message) => {
+        const JSONMessage = JSON.parse(message);
+        if (![null, undefined].includes(JSONMessage.data)) {
+        } else {
+            console.log(JSONMessage);
+            switch (JSONMessage.action) {
                 case "close":
                     element.hide();
                     break;
                 case "validate":
-                    openWindow(element);
+                    validateCredentials(element, JSONMessage);
                     break;
             }
         }
     });
+}
+
+const validateCredentials = async (element, message) => {
+    const response = await http.post('/login', message);
+    if (response.data.status === false) {
+        const notifier = require('node-notifier');
+        notifier.notify({
+            title: 'Error',
+            message: response.data.message,
+        });
+    } else {
+        await openWindow(element);
+    }
 }
 
 const openWindow = async (element) => {
@@ -34,7 +54,8 @@ const openWindow = async (element) => {
         frame: false,
     });
 
-    menu.loadFile(join(__dirname, '../views/menu.html')).then(()=> {});
+    menu.loadFile(join(__dirname, '../views/menu.html')).then(() => {
+    });
     setHtmlSize(menu);
     await responsiveWindows(menu);
 

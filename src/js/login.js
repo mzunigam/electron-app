@@ -6,10 +6,16 @@ const DOM = {
         const btnIniciar = document.getElementById('btnIniciar');
         const btnCancelar = document.getElementById('btnCancelar');
         btnIniciar.addEventListener('click', () => {
-            window["electronAPI"].rendererMain('validate');
+            const json = {
+                action: 'validate',
+                usuario : document.getElementById('usuario').value,
+                password : document.getElementById('password').value
+            };
+            window["electronAPI"].rendererMain(JSON.stringify(json));
         });
         btnCancelar.addEventListener('click', () => {
-            window["electronAPI"].rendererMain('close');
+
+            window["electronAPI"].rendererMain(JSON.stringify({action: 'close'}));
         });
     },
 };

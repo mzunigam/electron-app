@@ -18,11 +18,13 @@ const init = async () => {
     login.loadFile(join(__dirname, '/views/login.html')).then(()=> {});
     setHtmlSize(login);
     await responsiveWindows(login);
+
     login.on('close', (e) => {
         e.preventDefault();
         login.hide();
     });
-    callBack(login);
+
+    await callBack(login);
 }
 
 app.whenReady().then(init);

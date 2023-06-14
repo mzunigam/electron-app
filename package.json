@@ -16,7 +16,9 @@
   "license": "MIT",
   "dependencies": {
     "@material/data-table": "^14.0.0",
-    "electron-squirrel-startup": "^1.0.0"
+    "axios": "^1.4.0",
+    "electron-squirrel-startup": "^1.0.0",
+    "node-notifier": "^10.0.1"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.1.1",
