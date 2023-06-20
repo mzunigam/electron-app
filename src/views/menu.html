@@ -29,13 +29,16 @@
             </div>
             <div class=" d-flex justify-content-end" style="width: 25%;border-radius: 0 !important;">
                 <div class="d-flex gap-4 align-items-center text-white">
-                    <button class="btn btn-header-hover titlebar-button bg-transparent text-white border-white" data-mdb-toggle="tooltip" title="Minimizar">
+                    <button class="btn btn-header-hover titlebar-button bg-transparent text-white border-white"
+                            data-mdb-toggle="tooltip" title="Minimizar">
                         <i class="fa fa-window-minimize" aria-hidden="true"></i>
                     </button>
-                    <button class="btn btn-header-hover titlebar-button bg-transparent text-white border-white" data-mdb-toggle="tooltip" title="Maximizar">
+                    <button class="btn btn-header-hover titlebar-button bg-transparent text-white border-white"
+                            data-mdb-toggle="tooltip" title="Maximizar">
                         <i class="fa fa-window-maximize" aria-hidden="true"></i>
                     </button>
-                    <button class="btn btn-header-hover titlebar-button bg-transparent text-white border-white" data-mdb-toggle="tooltip" title="Cerrar">
+                    <button class="btn btn-header-hover titlebar-button bg-transparent text-white border-white"
+                            data-mdb-toggle="tooltip" title="Cerrar">
                         <i class="fa fa-times" aria-hidden="true"></i>
                     </button>
                 </div>
@@ -70,7 +73,8 @@
                 </div>
                 <hr class="mt-4">
                 <div class="table-responsive" style="overflow-y: scroll; height: 26.6rem;">
-                    <table id="tblPrincipal" class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp w-100">
+                    <table id="tblPrincipal"
+                           class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp w-100">
                         <thead>
                         <tr>
                             <th class="mdl-data-table__cell--non-numeric">ID</th>
@@ -97,43 +101,9 @@
         crossorigin="anonymous"></script>
 <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 <script src="../lib/js/datatables.min.js"></script>
+<script src="../js/menu.js" type="module"></script>
 <script>
     document.querySelector(".titlebar").style.webkitAppRegion = "drag";
-    $('#tblPrincipal').DataTable({
-        autoWidth: true,
-        language: {
-            "lengthMenu": "Mostrar: _MENU_",
-            "zeroRecords": "&nbsp;&nbsp;&nbsp; No se encontraron resultados",
-            "info": "&nbsp;&nbsp;&nbsp; Mostrando del _START_ al _END_ de un total de _TOTAL_ registros",
-            "infoEmpty": "&nbsp;&nbsp;&nbsp; Mostrando 0 de 0 registros",
-            "search": "Filtrar:",
-            "loadingRecords": "Cargando...",
-            "paginate": {
-                "first": "First",
-                "last": "Last",
-                "next": "Siguiente",
-                "previous": "Anterior"
-            }
-        },
-        ajax: {
-            type: 'POST',
-            url: '../Servlet/HorasExtrasServlet?accion=listarHorasExtrasRecuperacion',
-            data: {
-                json: JSON.stringify(json)
-            }, beforeSend: function () {
-            }, complete: function (datos) {
-            }
-        },
-        bSort: false,
-        bFilter: false,
-        // serverSide: true,
-        // processing: true,
-        aaSorting: [0],
-        ordering: false,
-        bLengthChange: false,
-        bInfo: true,
-        paging: true,
-    });
 </script>
 
 </html>
