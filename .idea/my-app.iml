@@ -17,5 +17,7 @@
     <orderEntry type="library" name="material" level="application" />
     <orderEntry type="library" name="fontawesome" level="application" />
     <orderEntry type="library" name="all" level="application" />
+    <orderEntry type="library" name="@types/jquery" level="application" />
+    <orderEntry type="library" name="@types/datatables.net" level="application" />
   </component>
 </module>

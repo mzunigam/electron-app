@@ -1,22 +1,26 @@
 const DOM = {
-    init(){
+    init() {
         DOM.elementEvents();
     },
-    elementEvents(){
+    elementEvents() {
         const btnIniciar = document.getElementById('btnIniciar');
         const btnCancelar = document.getElementById('btnCancelar');
-        btnIniciar.addEventListener('click', () => {
-            const json = {
-                action: 'validate',
-                usuario : document.getElementById('usuario').value,
-                password : document.getElementById('password').value
-            };
-            window["electronAPI"].rendererMain(JSON.stringify(json));
-        });
-        btnCancelar.addEventListener('click', () => {
+        if (btnIniciar) {
+            btnIniciar.addEventListener('click', () => {
+                const json = {
+                    action: 'validate',
+                    usuario: document.getElementById('usuario').value,
+                    password: document.getElementById('password').value
+                };
+                window["electronAPI"].rendererMain(JSON.stringify(json));
+            });
+        }
+        if (btnCancelar) {
+            btnCancelar.addEventListener('click', () => {
 
-            window["electronAPI"].rendererMain(JSON.stringify({action: 'close'}));
-        });
+                window["electronAPI"].rendererMain(JSON.stringify({action: 'close'}));
+            });
+        }
     },
 };
 

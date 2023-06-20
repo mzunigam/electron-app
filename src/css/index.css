@@ -21,7 +21,7 @@
   font-size: 0.75rem;
   width: 2rem;
   height: 2rem;
-  border-radius:25%;
+  border-radius: 0.5rem;
   background: rgb(155, 204, 255);
   display: flex;
   justify-content: center;
