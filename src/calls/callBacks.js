@@ -4,7 +4,7 @@ const {join} = require("path");
 const {setHtmlSize, responsiveWindows} = require('../commons/utilities');
 const axios = require('axios');
 const http = axios.create({
-    baseURL: 'http://localhost:8082/api/v1',
+    baseURL: 'http://127.0.0.1:8082/api/v1',
     timeout: 1000,
     headers: {'Content-Type': 'application/json'}
 });

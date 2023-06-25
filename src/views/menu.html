@@ -12,7 +12,12 @@
     <link rel="stylesheet" href="../lib/css/material.indigo-pink.min.css">
     <link rel="stylesheet" href="../lib/css/datatables.min.css"/>
 </head>
-<body class="bg-transparent" style="overflow: visible; width: 50rem">
+<style>
+    .form-control{
+        padding-left: 1rem !important;
+    }
+</style>
+<body class="bg-transparent" style="overflow: visible; width: 75rem">
 <div style="border: 0.75rem solid rgba(17, 140, 255, 0.247); border-radius: 0.75rem;">
     <div class="card main-panel d-flex w-100">
         <div class="card-header d-flex w-100 titlebar">
@@ -54,37 +59,38 @@
                     <div class="form-outline" style="width: 300px !important;">
                         <button data-mdb-toggle="tooltip" title="Usar voz" class="fa fa-microphone trailing"
                                 id="spanMicroPhone"></button>
-                        <input type="text" id="descripcion" class="form-control form-icon-trailing"/>
-                        <label class="form-label" for="descripcion">Descripción</label>
+                        <input type="text" id="campo" class="form-control form-icon-trailing"/>
+                        <label class="form-label" for="campo">Campo</label>
                     </div>
                     <div class="form-outline" style="width: 200px !important;">
                         <label for="modulo" class="form-label m-0 w-100">
                             <select id="modulo" class="form-select">
-                                <option value="">Todos los modulos</option>
-                                <option value="123">123</option>
-                                <option value="1234">1234</option>
                             </select>
                         </label>
                     </div>
                     <div class="d-flex gap-4 shadow-0">
-                        <button class="btn btn-primary">Buscar</button>
-                        <button class="btn  text-black border-dark">Limpiar</button>
+                        <button class="btn btn-primary" id="btnBuscar">Buscar</button>
+                        <button class="btn  text-black border-dark" id="btnLimpiar">Limpiar</button>
                     </div>
                 </div>
                 <hr class="mt-4">
-                <div class="table-responsive" style="overflow-y: scroll; height: 26.6rem;">
-                    <div class="mt-2 mb-2">
-                        <button class="btn btn-primary" id="btnNuevo">Nuevo</button>
+                <div class="mt-2 mb-2 d-flex align-items-center gap-5">
+                    <button class="btn btn-primary" id="btnNuevo">Nuevo</button>
+                    <div>
+                        <span class="badge" id="msg_info"></span>
                     </div>
+                </div>
+                <div class="table-responsive" style="overflow-y: scroll; height: 100%; min-height: 440px">
                     <table id="tblPrincipal"
                            class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp w-100">
                         <thead>
                         <tr>
-                            <th class="mdl-data-table__cell--non-numeric">ID</th>
+<!--                            <th class="mdl-data-table__cell&#45;&#45;non-numeric">ID</th>-->
                             <th scope="col">PALABRA</th>
                             <th scope="col">DESCRIPCION</th>
-                            <th scope="col">MODULO</th>
                             <th scope="col">CARPETA</th>
+                            <th scope="col">MODULO</th>
+                            <th scope="col">ACCIONES</th>
                         </tr>
                         </thead>
                         <tbody>
