@@ -60,18 +60,28 @@ const DOM = {
             await insertarNuevaFila();
         });
         document.getElementById("btnBuscar").addEventListener('click', async () => {
+            document.getElementById("btnLimpiar").disabled = true;
             document.getElementById('btnBuscar').disabled = true;
             if (datatable !== null) {
                 datatable.destroy();
                 $('#tblPrincipal tbody').empty();
             }
             await this.getData();
+            document.getElementById("btnLimpiar").disabled = false;
             document.getElementById('btnBuscar').disabled = false;
         });
         document.querySelector('.close').addEventListener('click', () => {
             window["electronAPI"].event(JSON.stringify({action: 'close'}));
         });
+        document.querySelector(".minimize").addEventListener('click', () => {
+            window["electronAPI"].event(JSON.stringify({action: 'minimize'}));
+        });
+        // document.querySelector(".maximize").addEventListener('click', () => {
+        //     window["electronAPI"].event(JSON.stringify({action: 'maximize'}));
+        // });
         document.getElementById("btnLimpiar").addEventListener('click', async () => {
+            document.getElementById("btnLimpiar").disabled = true;
+            document.getElementById('btnBuscar').disabled = true;
             document.getElementById('campo').value = '';
             document.getElementById('modulo').value = 0;
             if (datatable !== null) {
@@ -79,10 +89,12 @@ const DOM = {
                 $('#tblPrincipal tbody').empty();
             }
             datatable = null;
+            document.getElementById("btnLimpiar").disabled = false;
+            document.getElementById('btnBuscar').disabled = false;
         });
     },
     async getData() {
-        const respuestaCampos = await fetch('http://127.0.0.1:8082/api/v1/campo/get', {
+        const respuestaCampos = await fetch('http://3.15.143.154:8082/api/v1/campo/get', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -101,7 +113,7 @@ const DOM = {
         return jsonCampos;
     },
     async loadData() {
-        const respuestaModulos = await fetch('http://127.0.0.1:8082/api/v1/modulo');
+        const respuestaModulos = await fetch('http://3.15.143.154:8082/api/v1/modulo');
         const jsonModulos = await respuestaModulos.json();
         document.getElementById('modulo').innerHTML = '<option value="0">[MODULOS]</option>' + jsonModulos.map(modulo => {
             return `<option value="${modulo["id_modulo"]}">${modulo["nomb_modulo"]}</option>`;
@@ -150,12 +162,11 @@ const DOM = {
 };
 
 const comboCarpeta = async () => {
-    const respuesta = await fetch('http://127.0.0.1:8082/api/v1/carpeta/get');
+    const respuesta = await fetch('http://3.15.143.154:8082/api/v1/carpeta/get');
     if (respuesta.status === 200) {
         const json = await respuesta.json();
-        return json.map(x => {
-            return '<option data-value="" value="0" data-id="0">[SELECCIONE]</option>' +
-                `<option data-value="${x["nomb_modulo"]}" data-id="${x["id_modulo"]}" value="${x["id_carpeta"]}">${x["nomb_carpeta"]}</option>`;
+        return '<option data-value="" value="0" data-id="0">[SELECCIONE]</option>' + json.map(x => {
+            return `<option data-value="${x["nomb_modulo"]}" data-id="${x["id_modulo"]}" value="${x["id_carpeta"]}">${x["nomb_carpeta"]}</option>`;
         }).join('');
     }
 }
@@ -214,7 +225,7 @@ const insertarNuevaFila = async () => {
             return;
         }
 
-        const respuesta = await fetch('http://127.0.0.1:8082/api/v1/campo', {
+        const respuesta = await fetch('http://3.15.143.154:8082/api/v1/campo', {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {
@@ -247,16 +258,20 @@ const editarFila = async (row, data, index) => {
     row.querySelector('.descripcion').innerHTML = `
           <input type="text" class="form-control" id="descripcion" name="descripcion" value="${data["descripcion"]}"/>
     `;
-
+    console.log(dataCarpeta);
     row.querySelector('.id_carpeta').innerHTML = `<select class="form-control" id="id_carpeta">${dataCarpeta}</select>`;
     $(row.querySelector('.id_carpeta')).on('change', async () => {
         row.querySelector('.id_modulo').innerHTML = row.querySelector("#id_carpeta").selectedOptions[0].getAttribute("data-value")
     });
+    console.log(data["id_carpeta"]);
     row.querySelector('#id_carpeta').value = data["id_carpeta"];
     row.querySelector('.acciones').innerHTML = `
     <button class="btn btn-sm btn-primary btnGuardarEdicion"><i class="fa fa-save"></i></button>
     <button class="btn btn-sm btn-outline-secondary btnVolver"><i class="fa fa-redo"></i></button>
     `;
+    row.querySelector('.btnVolver').addEventListener('click', async () => {
+        document.getElementById("btnBuscar").click();
+    });
 
     row.querySelector('.btnGuardarEdicion').addEventListener('click', async () => {
         const body = {
@@ -274,27 +289,34 @@ const editarFila = async (row, data, index) => {
             return;
         }
 
-        const respuesta = await fetch('http://127.0.0.1:8082/api/v1/campo', {
+        const respuesta = await fetch('http://3.15.143.154:8082/api/v1/campo', {
             method: 'PUT',
             body: JSON.stringify(body),
             headers: {
                 'Content-Type': 'application/json'
             }
         });
+        console.log(body);
         const json = await respuesta.json();
         const msg_info = document.getElementById("msg_info");
         msg_info.innerHTML = json["message"];
         if (respuesta.status === 200) {
             msg_info.classList.add("badge-success");
-
+            document.getElementById("btnBuscar").click();
         } else {
             msg_info.classList.add("badge-danger");
         }
+
+        setTimeout(() => {
+            msg_info.classList.remove("badge-success");
+            msg_info.classList.remove("badge-danger");
+            msg_info.innerHTML = "";
+        }, 3000);
     });
 }
 
 const eliminarFila = async (row, data, index) => {
-    const respuesta = await fetch('http://127.0.0.1:8082/api/v1/campo/' + data["id_campo"], {
+    const respuesta = await fetch('http://3.15.143.154:8082/api/v1/campo/' + data["id_campo"], {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
@@ -316,17 +338,15 @@ const eliminarFila = async (row, data, index) => {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    $('.acciones').css('display','none');
+    const acciones = document.querySelector('.acciones');
+    acciones.style.display = 'none';
     userType = window["electronAPI"].ipcRenderer.sendSync('return-data','');
     if (userType !== 2) {
-        $('.acciones').css('display', 'block');
+        acciones.style.display = 'table-cell';
     } else {
-        $('.acciones').remove();
         $('#btnNuevo').css('display', 'none');
         columns.pop();
         columnDefs.pop();
-        console.log(columns);
-        console.log(columnDefs);
     }
     DOM.init().then(async () => {
         dataCarpeta = await comboCarpeta();

@@ -20,6 +20,22 @@ const DOM = {
                 window["electronAPI"].event(JSON.stringify({action: 'close'}));
             });
         }
+        const usuario = document.getElementById('usuario');
+        const password = document.getElementById('password');
+        if (usuario) {
+            usuario.addEventListener('keyup', (e) => {
+                if (e['keyCode'] === 13) {
+                    password.focus();
+                }
+            });
+        }
+        if (password) {
+            password.addEventListener('keyup', (e) => {
+                if (e['keyCode'] === 13) {
+                    btnIniciar.click();
+                }
+            });
+        }
     },
 };
 
