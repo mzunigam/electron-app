@@ -17,7 +17,7 @@
         padding-left: 1rem !important;
     }
 </style>
-<body class="bg-transparent" style="overflow: visible; width: 75rem">
+<body class="bg-transparent" style="overflow: hidden; width: 75rem">
 <div style="border: 0.75rem solid rgba(17, 140, 255, 0.247); border-radius: 0.75rem;">
     <div class="card main-panel d-flex w-100">
         <div class="card-header d-flex w-100 titlebar">
@@ -34,15 +34,15 @@
             </div>
             <div class=" d-flex justify-content-end" style="width: 25%;border-radius: 0 !important;">
                 <div class="d-flex gap-4 align-items-center text-white">
-                    <span class="btn btn-header-hover titlebar-button bg-transparent text-white border-white"
+                    <span class="btn btn-header-hover titlebar-button bg-transparent text-white border-white minimize"
                             data-mdb-toggle="tooltip" title="Minimizar">
                         <i class="fa fa-window-minimize" aria-hidden="true"></i>
                     </span>
-                    <span class="btn btn-header-hover titlebar-button bg-transparent text-white border-white"
+                    <span class="btn btn-header-hover titlebar-button bg-transparent text-white border-white maximize"
                             data-mdb-toggle="tooltip" title="Maximizar">
                         <i class="fa fa-window-maximize" aria-hidden="true"></i>
                     </span>
-                    <span class="btn btn-header-hover titlebar-button bg-transparent text-white border-white"
+                    <span class="btn btn-header-hover titlebar-button bg-transparent text-white border-white close"
                             data-mdb-toggle="tooltip" title="Cerrar">
                         <i class="fa fa-times" aria-hidden="true"></i>
                     </span>
@@ -90,7 +90,7 @@
                             <th scope="col">DESCRIPCION</th>
                             <th scope="col">CARPETA</th>
                             <th scope="col">MODULO</th>
-                            <th scope="col">ACCIONES</th>
+                            <th scope="col" class="aciones">ACCIONES</th>
                         </tr>
                         </thead>
                         <tbody>

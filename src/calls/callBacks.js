@@ -9,21 +9,31 @@ const http = axios.create({
     headers: {'Content-Type': 'application/json'}
 });
 
+let userType = 0;
+
 const callBack = async (element) => {
-    ipcMain.on('renderer-to-main', (event, message) => {
+    ipcMain.on('event', (event, message) => {
         const JSONMessage = JSON.parse(message);
         if (![null, undefined].includes(JSONMessage.data)) {
         } else {
-            console.log(JSONMessage);
             switch (JSONMessage.action) {
                 case "close":
-                    element.hide();
+                    element.close();
+                    break;
+                case "minimize":
+                    element.minimize();
+                    break;
+                case "maximize":
+                    element.maximize();
                     break;
                 case "validate":
                     validateCredentials(element, JSONMessage);
                     break;
             }
         }
+    });
+    ipcMain.on('return-data', (event, message) => {
+        event.returnValue = userType;
     });
 }
 
@@ -36,36 +46,16 @@ const validateCredentials = async (element, message) => {
             message: response.data.message,
         });
     } else {
-        await openWindow(element);
+        await openWindow(element, response.data.type);
     }
 }
 
-const openWindow = async (element) => {
-    element.hide();
-
-    const menu = new BrowserWindow({
-        minWidth: 100,
-        height: 100,
-        webPreferences: {
-            nodeIntegration: true,
-            preload: join(__dirname, 'preload.js')
-        },
-        transparent: true,
-        frame: false,
+const openWindow = async (element, type) => {
+    userType = type;
+    element.loadFile(join(__dirname, '../views/menu.html')).then(() => {
     });
-
-    menu.loadFile(join(__dirname, '../views/menu.html')).then(() => {
-    });
-    setHtmlSize(menu);
-    await responsiveWindows(menu);
-
-    menu.once("ready-to-show", () => {
-        menu.show();
-    });
-    menu.on('close', (e) => {
-        e.preventDefault();
-        menu.hide();
-    });
+    setHtmlSize(element);
+    await responsiveWindows(element);
 
 }
 

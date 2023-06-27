@@ -2,9 +2,10 @@ const {app,BrowserWindow} = require('electron');
 const {join} = require("path");
 const {setHtmlSize, responsiveWindows}  = require('./commons/utilities');
 const {callBack} = require("./calls/callBacks");
-const init = async () => {
+const init = async (element = null) => {
 
-    const login = new BrowserWindow({
+    if(element === null){
+    element = new BrowserWindow({
         minWidth: 100,
         height: 100,
         webPreferences: {
@@ -15,16 +16,17 @@ const init = async () => {
         frame: false,
 
     });
-    login.loadFile(join(__dirname, '/views/login.html')).then(()=> {});
-    setHtmlSize(login);
-    await responsiveWindows(login);
-
-    login.on('close', (e) => {
+    }
+    element.loadFile(join(__dirname, '/views/login.html')).then(()=> {});
+    setHtmlSize(element);
+    await responsiveWindows(element);
+    element.on('close', (e) => {
         e.preventDefault();
-        login.hide();
+        element.destroy();
     });
-
-    await callBack(login);
+    await callBack(element);
 }
 
 app.whenReady().then(init);
+
+module.exports = {init};

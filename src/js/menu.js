@@ -3,6 +3,52 @@ let creating = false;
 let editing = false;
 let deleting = false;
 let dataCarpeta = null;
+let userType = 0;
+let columns = [
+    {
+        "data": null, render: function (data, type, row) {
+            return '';
+        }
+    },
+    {
+        "data": "nomb_campo", render: function (data, type, row) {
+            return `<div class="text-center nomb_campo">${data}</div>`;
+        },
+    },
+    {
+        "data": "descripcion", render: function (data, type, row) {
+            return `<div class="text-center descripcion">${data}</div>`;
+        },
+    },
+    {
+        "data": "nomb_carpeta", render: function (data, type, row) {
+            return `<div class="text-center id_carpeta">${data}</div>`;
+        },
+    },
+    {
+        "data": "nomb_modulo", render: function (data, type, row) {
+            return `<div class="text-center id_modulo">${data}</div>`;
+        },
+    },
+    {
+        "data": "id_campo", render: function (data, type, row) {
+            return `
+                    <div class="acciones">
+                    <button type="button" class="btn btn-primary btn-sm btnEditar"><i class="fa fa-edit"></i></button>
+                    <button type="button" class="btn btn-danger btn-sm btnEliminar"><i class="fa fa-trash"></i></button>
+                    </div>
+                    `
+        }
+    },
+];
+let columnDefs = [
+    {targets: 0, orderable: false, width: '1%', className: 'center'},
+    {targets: 1, orderable: false, width: '20%', className: 'text-center'},
+    {targets: 2, orderable: false, width: '27.5%', className: 'text-center'},
+    {targets: 3, orderable: false, width: '17.5%', className: 'text-center'},
+    {targets: 4, orderable: false, width: '15%', className: 'text-center'},
+    {targets: 5, orderable: false, width: '17.5%', className: 'text-center'},
+];
 const DOM = {
     async init() {
         await this.getData();
@@ -21,6 +67,9 @@ const DOM = {
             }
             await this.getData();
             document.getElementById('btnBuscar').disabled = false;
+        });
+        document.querySelector('.close').addEventListener('click', () => {
+            window["electronAPI"].event(JSON.stringify({action: 'close'}));
         });
         document.getElementById("btnLimpiar").addEventListener('click', async () => {
             document.getElementById('campo').value = '';
@@ -54,7 +103,7 @@ const DOM = {
     async loadData() {
         const respuestaModulos = await fetch('http://127.0.0.1:8082/api/v1/modulo');
         const jsonModulos = await respuestaModulos.json();
-        document.getElementById('modulo').innerHTML = '<option value="0">[TODOS]</option>' + jsonModulos.map(modulo => {
+        document.getElementById('modulo').innerHTML = '<option value="0">[MODULOS]</option>' + jsonModulos.map(modulo => {
             return `<option value="${modulo["id_modulo"]}">${modulo["nomb_modulo"]}</option>`;
         }).join('');
     },
@@ -76,52 +125,8 @@ const DOM = {
                 }
             },
             data: data,
-            columns: [
-                {
-                    "data": null, render: function (data, type, row) {
-                        return '';
-                    }
-                },
-                {
-                    "data": "nomb_campo", render: function (data, type, row) {
-                        return `<div class="text-center nomb_campo">${data}</div>`;
-                    },
-                },
-                {
-                    "data": "descripcion", render: function (data, type, row) {
-                        return `<div class="text-center descripcion">${data}</div>`;
-                    },
-                },
-                {
-                    "data": "nomb_carpeta", render: function (data, type, row) {
-                        return `<div class="text-center id_carpeta">${data}</div>`;
-                    },
-                },
-                {
-                    "data": "nomb_modulo", render: function (data, type, row) {
-                        return `<div class="text-center id_modulo">${data}</div>`;
-                    },
-                },
-                {
-                    "data": "id_campo", render: function (data, type, row) {
-                        return `
-                    <div class="acciones">
-                    <button type="button" class="btn btn-primary btn-sm btnEditar"><i class="fa fa-edit"></i></button>
-                    <button type="button" class="btn btn-danger btn-sm btnEliminar"><i class="fa fa-trash"></i></button>
-                    </div>
-                    `
-                    }
-                },
-            ],
-            columnDefs: [
-                {targets: 0, orderable: false, width: '1%', className: 'center'},
-                {targets: 1, orderable: false, width: '20%', className: 'text-center'},
-                {targets: 2, orderable: false, width: '27.5%', className: 'text-center'},
-                {targets: 3, orderable: false, width: '17.5%', className: 'text-center'},
-                {targets: 4, orderable: false, width: '15%', className: 'text-center'},
-                {targets: 5, orderable: false, width: '17.5%', className: 'text-center'},
-                // {targets: 5, orderable: false, width: '17.5%', className: 'text-center'},
-            ],
+            columns: columns,
+            columnDefs: columnDefs,
             bSort: false,
             bFilter: false,
             aaSorting: [0],
@@ -266,11 +271,6 @@ const editarFila = async (row, data, index) => {
             const msg_info = document.getElementById("msg_info");
             msg_info.innerHTML = "Debe completar todos los campos";
             msg_info.classList.add("badge-danger");
-            // setTimeout(() => {
-            //     msg_info.classList.remove("badge-danger");
-            //     msg_info.innerHTML = "";
-            //     document.getElementById('btnGuardar').disabled = false;
-            // },3000);
             return;
         }
 
@@ -290,11 +290,6 @@ const editarFila = async (row, data, index) => {
         } else {
             msg_info.classList.add("badge-danger");
         }
-        // setTimeout(() => {
-        //     msg_info.classList.remove("badge-success");
-        //     msg_info.classList.remove("badge-danger");
-        //     msg_info.innerHTML = "";
-        // }, 3000);
     });
 }
 
@@ -321,6 +316,18 @@ const eliminarFila = async (row, data, index) => {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    $('.acciones').css('display','none');
+    userType = window["electronAPI"].ipcRenderer.sendSync('return-data','');
+    if (userType !== 2) {
+        $('.acciones').css('display', 'block');
+    } else {
+        $('.acciones').remove();
+        $('#btnNuevo').css('display', 'none');
+        columns.pop();
+        columnDefs.pop();
+        console.log(columns);
+        console.log(columnDefs);
+    }
     DOM.init().then(async () => {
         dataCarpeta = await comboCarpeta();
     });

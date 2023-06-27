@@ -12,13 +12,12 @@ const DOM = {
                     usuario: document.getElementById('usuario').value,
                     password: document.getElementById('password').value
                 };
-                window["electronAPI"].rendererMain(JSON.stringify(json));
+                window["electronAPI"].event(JSON.stringify(json));
             });
         }
         if (btnCancelar) {
             btnCancelar.addEventListener('click', () => {
-
-                window["electronAPI"].rendererMain(JSON.stringify({action: 'close'}));
+                window["electronAPI"].event(JSON.stringify({action: 'close'}));
             });
         }
     },
