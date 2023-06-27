@@ -13,6 +13,9 @@ const DOM = {
                     password: document.getElementById('password').value
                 };
                 window["electronAPI"].event(JSON.stringify(json));
+                setTimeout(() => {
+                    document.getElementById('badgeError').style.opacity = '1';
+                },3000);
             });
         }
         if (btnCancelar) {
@@ -24,6 +27,7 @@ const DOM = {
         const password = document.getElementById('password');
         if (usuario) {
             usuario.addEventListener('keyup', (e) => {
+                document.getElementById('badgeError').style.opacity = '0';
                 if (e['keyCode'] === 13) {
                     password.focus();
                 }
@@ -31,6 +35,7 @@ const DOM = {
         }
         if (password) {
             password.addEventListener('keyup', (e) => {
+                document.getElementById('badgeError').style.opacity = '0';
                 if (e['keyCode'] === 13) {
                     btnIniciar.click();
                 }

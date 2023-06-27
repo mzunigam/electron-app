@@ -60,6 +60,8 @@ const DOM = {
             await insertarNuevaFila();
         });
         document.getElementById("btnBuscar").addEventListener('click', async () => {
+            creating = false;
+            document.getElementById('btnNuevo').disabled = false;
             document.getElementById("btnLimpiar").disabled = true;
             document.getElementById('btnBuscar').disabled = true;
             if (datatable !== null) {
@@ -80,6 +82,7 @@ const DOM = {
         //     window["electronAPI"].event(JSON.stringify({action: 'maximize'}));
         // });
         document.getElementById("btnLimpiar").addEventListener('click', async () => {
+            document.getElementById('btnNuevo').disabled = false;
             document.getElementById("btnLimpiar").disabled = true;
             document.getElementById('btnBuscar').disabled = true;
             document.getElementById('campo').value = '';
@@ -213,7 +216,7 @@ const insertarNuevaFila = async () => {
             id_modulo: Number(document.getElementById('id_carpeta').selectedOptions[0].getAttribute("data-id"))
         };
 
-        if(body.nomb_campo === "" || body.descripcion === "" || body.id_carpeta === 0){
+        if (body.nomb_campo === "" || body.descripcion === "" || body.id_carpeta === 0) {
             const msg_info = document.getElementById("msg_info");
             msg_info.innerHTML = "Debe completar todos los campos";
             msg_info.classList.add("badge-danger");
@@ -221,7 +224,7 @@ const insertarNuevaFila = async () => {
                 msg_info.classList.remove("badge-danger");
                 msg_info.innerHTML = "";
                 document.getElementById('btnGuardar').disabled = false;
-            },3000);
+            }, 3000);
             return;
         }
 
@@ -237,6 +240,7 @@ const insertarNuevaFila = async () => {
         msg_info.innerHTML = json["message"];
         if (respuesta.status === 200) {
             msg_info.classList.add("badge-success");
+            document.getElementById("btnBuscar").click();
         } else {
             msg_info.classList.add("badge-danger");
         }
@@ -244,59 +248,104 @@ const insertarNuevaFila = async () => {
             msg_info.classList.remove("badge-success");
             msg_info.classList.remove("badge-danger");
             msg_info.innerHTML = "";
+            document.getElementById('btnNuevo').disabled = false;
         }, 3000);
         document.getElementById('btnNuevo').disabled = false;
-        document.getElementById("btnBuscar").click();
     });
     document.getElementById('btnNuevo').disabled = false;
 };
 
 const editarFila = async (row, data, index) => {
-    row.querySelector('.nomb_campo').innerHTML = `
+    if (creating === true) {
+        const msg_info = document.getElementById("msg_info");
+        msg_info.innerHTML = "Se esta creando un nuevo registro, no se puede editar otro registro";
+        msg_info.classList.add("badge-warning");
+        setTimeout(() => {
+            msg_info.classList.remove("badge-warning");
+            msg_info.innerHTML = "";
+        },3000);
+    } else {
+        document.getElementById('btnNuevo').disabled = true;
+        row.querySelector('.nomb_campo').innerHTML = `
             <input type="text" class="form-control" id="nomb_campo" name="nomb_campo" value="${data["nomb_campo"]}"/>
     `;
-    row.querySelector('.descripcion').innerHTML = `
+        row.querySelector('.descripcion').innerHTML = `
           <input type="text" class="form-control" id="descripcion" name="descripcion" value="${data["descripcion"]}"/>
     `;
-    console.log(dataCarpeta);
-    row.querySelector('.id_carpeta').innerHTML = `<select class="form-control" id="id_carpeta">${dataCarpeta}</select>`;
-    $(row.querySelector('.id_carpeta')).on('change', async () => {
-        row.querySelector('.id_modulo').innerHTML = row.querySelector("#id_carpeta").selectedOptions[0].getAttribute("data-value")
-    });
-    console.log(data["id_carpeta"]);
-    row.querySelector('#id_carpeta').value = data["id_carpeta"];
-    row.querySelector('.acciones').innerHTML = `
+
+        row.querySelector('.id_carpeta').innerHTML = `<select class="form-control" id="id_carpeta">${dataCarpeta}</select>`;
+        $(row.querySelector('.id_carpeta')).on('change', async () => {
+            row.querySelector('.id_modulo').innerHTML = row.querySelector("#id_carpeta").selectedOptions[0].getAttribute("data-value")
+        });
+
+        row.querySelector('#id_carpeta').value = data["id_carpeta"];
+        row.querySelector('.acciones').innerHTML = `
     <button class="btn btn-sm btn-primary btnGuardarEdicion"><i class="fa fa-save"></i></button>
     <button class="btn btn-sm btn-outline-secondary btnVolver"><i class="fa fa-redo"></i></button>
     `;
-    row.querySelector('.btnVolver').addEventListener('click', async () => {
-        document.getElementById("btnBuscar").click();
-    });
+        row.querySelector('.btnVolver').addEventListener('click', async () => {
+            document.getElementById("btnBuscar").click();
+        });
 
-    row.querySelector('.btnGuardarEdicion').addEventListener('click', async () => {
-        const body = {
-            id_campo: data["id_campo"],
-            nomb_campo: row.querySelector('#nomb_campo').value,
-            descripcion: row.querySelector('#descripcion').value,
-            id_carpeta: Number(row.querySelector('#id_carpeta').value),
-            id_modulo: Number(row.querySelector('#id_carpeta').selectedOptions[0].getAttribute("data-id"))
-        };
+        row.querySelector('.btnGuardarEdicion').addEventListener('click', async () => {
+            const body = {
+                id_campo: data["id_campo"],
+                nomb_campo: row.querySelector('#nomb_campo').value,
+                descripcion: row.querySelector('#descripcion').value,
+                id_carpeta: Number(row.querySelector('#id_carpeta').value),
+                id_modulo: Number(row.querySelector('#id_carpeta').selectedOptions[0].getAttribute("data-id"))
+            };
 
-        if(body.nomb_campo === "" || body.descripcion === "" || body.id_carpeta === 0){
+            if (body.nomb_campo === "" || body.descripcion === "" || body.id_carpeta === 0) {
+                const msg_info = document.getElementById("msg_info");
+                msg_info.innerHTML = "Debe completar todos los campos";
+                msg_info.classList.add("badge-danger");
+                return;
+            }
+
+            const respuesta = await fetch('http://3.15.143.154:8082/api/v1/campo', {
+                method: 'PUT',
+                body: JSON.stringify(body),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log(body);
+            const json = await respuesta.json();
             const msg_info = document.getElementById("msg_info");
-            msg_info.innerHTML = "Debe completar todos los campos";
-            msg_info.classList.add("badge-danger");
-            return;
-        }
+            msg_info.innerHTML = json["message"];
+            if (respuesta.status === 200) {
+                msg_info.classList.add("badge-success");
+                document.getElementById("btnBuscar").click();
+            } else {
+                msg_info.classList.add("badge-danger");
+            }
 
-        const respuesta = await fetch('http://3.15.143.154:8082/api/v1/campo', {
-            method: 'PUT',
-            body: JSON.stringify(body),
+            setTimeout(() => {
+                msg_info.classList.remove("badge-success");
+                msg_info.classList.remove("badge-danger");
+                msg_info.innerHTML = "";
+            }, 3000);
+        });
+    }
+}
+
+const eliminarFila = async (row, data, index) => {
+    if (creating === true) {
+        const msg_info = document.getElementById("msg_info");
+        msg_info.innerHTML = "Se esta creando un nuevo registro, no se puede eliminar un registro";
+        msg_info.classList.add("badge-warning");
+        setTimeout(() => {
+            msg_info.classList.remove("badge-warning");
+            msg_info.innerHTML = "";
+        },3000);
+    } else {
+        const respuesta = await fetch('http://3.15.143.154:8082/api/v1/campo/' + data["id_campo"], {
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
             }
         });
-        console.log(body);
         const json = await respuesta.json();
         const msg_info = document.getElementById("msg_info");
         msg_info.innerHTML = json["message"];
@@ -306,41 +355,17 @@ const editarFila = async (row, data, index) => {
         } else {
             msg_info.classList.add("badge-danger");
         }
-
         setTimeout(() => {
-            msg_info.classList.remove("badge-success");
-            msg_info.classList.remove("badge-danger");
             msg_info.innerHTML = "";
+            msg_info.classList.remove("badge-success", "badge-danger");
         }, 3000);
-    });
-}
-
-const eliminarFila = async (row, data, index) => {
-    const respuesta = await fetch('http://3.15.143.154:8082/api/v1/campo/' + data["id_campo"], {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-    const json = await respuesta.json();
-    const msg_info = document.getElementById("msg_info");
-    msg_info.innerHTML = json["message"];
-    if (respuesta.status === 200) {
-        msg_info.classList.add("badge-success");
-        document.getElementById("btnBuscar").click();
-    } else {
-        msg_info.classList.add("badge-danger");
     }
-    setTimeout(() => {
-        msg_info.innerHTML = "";
-        msg_info.classList.remove("badge-success", "badge-danger");
-    }, 3000);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const acciones = document.querySelector('.acciones');
     acciones.style.display = 'none';
-    userType = window["electronAPI"].ipcRenderer.sendSync('return-data','');
+    userType = window["electronAPI"].ipcRenderer.sendSync('return-data', '');
     if (userType !== 2) {
         acciones.style.display = 'table-cell';
     } else {
