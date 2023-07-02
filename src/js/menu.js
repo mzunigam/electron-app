@@ -97,7 +97,7 @@ const DOM = {
         });
     },
     async getData() {
-        const respuestaCampos = await fetch('http://3.15.143.154:8082/api/v1/campo/get', {
+        const respuestaCampos = await fetch('http://3.138.124.248:8082/api/v1/campo/get', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -116,7 +116,7 @@ const DOM = {
         return jsonCampos;
     },
     async loadData() {
-        const respuestaModulos = await fetch('http://3.15.143.154:8082/api/v1/modulo');
+        const respuestaModulos = await fetch('http://3.138.124.248:8082/api/v1/modulo');
         const jsonModulos = await respuestaModulos.json();
         document.getElementById('modulo').innerHTML = '<option value="0">[MODULOS]</option>' + jsonModulos.map(modulo => {
             return `<option value="${modulo["id_modulo"]}">${modulo["nomb_modulo"]}</option>`;
@@ -165,7 +165,7 @@ const DOM = {
 };
 
 const comboCarpeta = async () => {
-    const respuesta = await fetch('http://3.15.143.154:8082/api/v1/carpeta/get');
+    const respuesta = await fetch('http://3.138.124.248:8082/api/v1/carpeta/get');
     if (respuesta.status === 200) {
         const json = await respuesta.json();
         return '<option data-value="" value="0" data-id="0">[SELECCIONE]</option>' + json.map(x => {
@@ -228,7 +228,7 @@ const insertarNuevaFila = async () => {
             return;
         }
 
-        const respuesta = await fetch('http://3.15.143.154:8082/api/v1/campo', {
+        const respuesta = await fetch('http://3.138.124.248:8082/api/v1/campo', {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {
@@ -303,7 +303,7 @@ const editarFila = async (row, data, index) => {
                 return;
             }
 
-            const respuesta = await fetch('http://3.15.143.154:8082/api/v1/campo', {
+            const respuesta = await fetch('http://3.138.124.248:8082/api/v1/campo', {
                 method: 'PUT',
                 body: JSON.stringify(body),
                 headers: {
@@ -340,7 +340,7 @@ const eliminarFila = async (row, data, index) => {
             msg_info.innerHTML = "";
         },3000);
     } else {
-        const respuesta = await fetch('http://3.15.143.154:8082/api/v1/campo/' + data["id_campo"], {
+        const respuesta = await fetch('http://3.138.124.248:8082/api/v1/campo/' + data["id_campo"], {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'

@@ -19,5 +19,8 @@
     <orderEntry type="library" name="all" level="application" />
     <orderEntry type="library" name="@types/jquery" level="application" />
     <orderEntry type="library" name="@types/datatables.net" level="application" />
+    <orderEntry type="library" name="@types/datatables.net" level="application" />
+    <orderEntry type="library" name="@types/jquery.bootstrap.wizard" level="application" />
+    <orderEntry type="library" name="@types/jquery" level="application" />
   </component>
 </module>
