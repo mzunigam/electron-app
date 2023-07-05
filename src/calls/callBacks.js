@@ -4,7 +4,11 @@ const {join} = require("path");
 const {setHtmlSize, responsiveWindows} = require('../commons/utilities');
 const axios = require('axios');
 const http = axios.create({
+<<<<<<< Updated upstream
     baseURL: 'http://3.138.124.248:8082/api/v1',
+=======
+    baseURL: 'http://74.208.94.23:8082/api/v1',
+>>>>>>> Stashed changes
     timeout: 1000,
     headers: {'Content-Type': 'application/json'}
 });
